@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import type { Scenario } from "@/types";
+import { saveClientSession } from "@/lib/client-session-storage";
+import type { ClientSession, Scenario, ScenarioResponse } from "@/types";
 
 type ScenarioFormValues = Required<Scenario>;
 type FieldName = keyof ScenarioFormValues;
@@ -43,11 +45,55 @@ function validate(values: ScenarioFormValues): FieldErrors {
   return errors;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isBoundedInteger(value: unknown) {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= 0 &&
+    value <= 12
+  );
+}
+
+function isScenarioResponse(value: unknown): value is ScenarioResponse {
+  if (!isRecord(value) || !isRecord(value.openingMessage)) {
+    return false;
+  }
+
+  const openingMessage = value.openingMessage;
+  const pressureLabels = [
+    "Receptive",
+    "Guarded",
+    "Defensive",
+    "Escalating",
+  ];
+
+  return (
+    typeof value.sessionId === "string" &&
+    value.sessionId.length > 0 &&
+    typeof value.simulationToken === "string" &&
+    value.simulationToken.length > 0 &&
+    typeof value.visiblePressureLabel === "string" &&
+    pressureLabels.includes(value.visiblePressureLabel) &&
+    isBoundedInteger(value.turnCount) &&
+    typeof openingMessage.id === "string" &&
+    openingMessage.id.length > 0 &&
+    (openingMessage.role === "user" ||
+      openingMessage.role === "counterpart") &&
+    typeof openingMessage.content === "string" &&
+    isBoundedInteger(openingMessage.turnNumber)
+  );
+}
+
 export function ScenarioSetupForm({
   initialScenario,
 }: {
   initialScenario: Scenario;
 }) {
+  const router = useRouter();
   const [values, setValues] = useState<ScenarioFormValues>({
     counterpart: initialScenario.counterpart,
     topic: initialScenario.topic,
@@ -57,6 +103,7 @@ export function ScenarioSetupForm({
   });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fieldRefs = useRef<Partial<Record<FieldName, FormFieldElement>>>({});
 
   function updateField(field: FieldName, value: string) {
@@ -73,8 +120,12 @@ export function ScenarioSetupForm({
     });
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
 
     const trimmedValues: ScenarioFormValues = {
       counterpart: values.counterpart.trim(),
@@ -95,10 +146,48 @@ export function ScenarioSetupForm({
 
     setValues(trimmedValues);
     setErrors({});
-    // TODO: Replace this temporary success state with the rehearsal API call.
-    setStatus(
-      "Scenario details are ready. The rehearsal engine will be connected in the next build step.",
-    );
+    setStatus(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/scenario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scenario: trimmedValues }),
+      });
+      const responseBody: unknown = await response.json();
+
+      if (!response.ok || !isScenarioResponse(responseBody)) {
+        throw new Error("Scenario creation failed.");
+      }
+
+      const clientSession: ClientSession = {
+        id: responseBody.sessionId,
+        status: "active",
+        stage: "simulation",
+        scenario: trimmedValues,
+        messages: [responseBody.openingMessage],
+        visiblePressureLabel: responseBody.visiblePressureLabel,
+        turnCount: responseBody.turnCount,
+        debrief: null,
+        selectedTurningPointTurnId: null,
+        originalBranchDisplay: null,
+        replayBranchDisplay: null,
+        comparison: null,
+        simulationToken: responseBody.simulationToken,
+      };
+
+      if (!saveClientSession(clientSession)) {
+        throw new Error("Session storage failed.");
+      }
+
+      router.push("/simulation");
+    } catch {
+      setStatus(
+        "Something went wrong building the counterpart. Please try again.",
+      );
+      setIsSubmitting(false);
+    }
   }
 
   function describedBy(field: FieldName) {
@@ -278,11 +367,15 @@ export function ScenarioSetupForm({
       </p>
 
       <div className="form-actions">
-        <button type="submit">Start rehearsal</button>
+        <button disabled={isSubmitting} type="submit">
+          {isSubmitting
+            ? "Building a realistic counterpart…"
+            : "Start rehearsal"}
+        </button>
         <Link href="/">Back</Link>
       </div>
 
-      <div className="form-status" aria-live="polite" role="status">
+      <div className="form-status" aria-live="assertive" role="alert">
         {status}
       </div>
 

@@ -12,6 +12,7 @@ export interface ScenarioRequest {
 }
 
 export interface ScenarioResponse {
+  sessionId: Identifier;
   openingMessage: ClientMessage;
   visiblePressureLabel: PressureLabel;
   turnCount: number;
