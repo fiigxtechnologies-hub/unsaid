@@ -1,65 +1,128 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const scenarios = [
+  {
+    title: "Ask my manager for a raise",
+    description:
+      "Request a compensation review without the conversation stalling.",
+    label: "Workplace",
+  },
+  {
+    title: "Set a boundary with a friend",
+    description:
+      "Address repeated last-minute cancellations without a blow-up.",
+    label: "Relationship",
+  },
+  {
+    title: "Address a missed deadline",
+    description:
+      "Understand the delay and rebuild accountability with a teammate.",
+    label: "Teamwork",
+  },
+] as const;
+
+const steps = [
+  "Describe the conversation",
+  "Rehearse realistic pushback",
+  "Replay the turning point",
+] as const;
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="site-shell">
+      <header className="site-header">
+        <nav className="site-nav" aria-label="Primary navigation">
+          <Link className="wordmark" href="/">
+            Unsaid
+          </Link>
+          <span className="product-label">AI conversation practice</span>
+        </nav>
+      </header>
+
+      <main>
+        <section className="hero" aria-labelledby="hero-heading">
+          <p className="eyebrow">
+            <span className="eyebrow-dot" aria-hidden="true" />
+            Conversation rehearsal and replay
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <h1 id="hero-heading">
+            Practice the conversation
+            <br />
+            before it matters.
+          </h1>
+          <p className="hero-copy">
+            Rehearse a hard conversation with a realistic AI counterpart, find
+            the moment that changed everything, and try it again.
+          </p>
+          <div className="hero-action">
+            <Link className="primary-cta" href="/setup">
+              Start a rehearsal
+              <span aria-hidden="true">→</span>
+            </Link>
+            <p>No account required.</p>
+          </div>
+        </section>
+
+        <section className="scenario-section" aria-labelledby="scenario-heading">
+          <div className="section-heading">
+            <div>
+              <p className="section-kicker">Practice library</p>
+              <h2 id="scenario-heading">Start with a common conversation</h2>
+            </div>
+            <p>Choose a starting point or describe your own situation.</p>
+          </div>
+
+          <div className="scenario-grid">
+            {scenarios.map((scenario) => (
+              <Link className="scenario-card" href="/setup" key={scenario.title}>
+                <span className="scenario-label">{scenario.label}</span>
+                <h3>{scenario.title}</h3>
+                <p>{scenario.description}</p>
+                <span className="card-action">
+                  Practice this conversation
+                  <span aria-hidden="true">→</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="process-section" aria-labelledby="process-heading">
+          <div className="process-heading">
+            <p className="section-kicker">A clearer way forward</p>
+            <h2 id="process-heading">How it works</h2>
+          </div>
+          <ol className="process-list">
+            {steps.map((step, index) => (
+              <li key={step}>
+                <span aria-hidden="true">0{index + 1}</span>
+                <p>{step}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <aside className="privacy-notice" aria-labelledby="privacy-heading">
+          <div className="privacy-mark" aria-hidden="true">
+            i
+          </div>
+          <div>
+            <h2 id="privacy-heading">Privacy &amp; simulation notice</h2>
+            <p>
+              Unsaid creates possible conversational scenarios for practice. It
+              cannot predict a real person&apos;s response and is not a substitute
+              for professional, legal, medical, HR, or mental-health advice.
+              Avoid entering passwords, financial details, or confidential
+              information.
+            </p>
+          </div>
+        </aside>
       </main>
+
+      <footer className="site-footer">
+        <span className="wordmark">Unsaid</span>
+        <span>Built for OpenAI Build Week</span>
+      </footer>
     </div>
   );
 }
