@@ -6,18 +6,21 @@ const scenarios = [
     description:
       "Request a compensation review without the conversation stalling.",
     label: "Workplace",
+    href: "/setup?preset=raise",
   },
   {
     title: "Set a boundary with a friend",
     description:
       "Address repeated last-minute cancellations without a blow-up.",
     label: "Relationship",
+    href: "/setup?preset=boundary",
   },
   {
     title: "Address a missed deadline",
     description:
       "Understand the delay and rebuild accountability with a teammate.",
     label: "Teamwork",
+    href: "/setup?preset=deadline",
   },
 ] as const;
 
@@ -74,7 +77,11 @@ export default function Home() {
 
           <div className="scenario-grid">
             {scenarios.map((scenario) => (
-              <Link className="scenario-card" href="/setup" key={scenario.title}>
+              <Link
+                className="scenario-card"
+                href={scenario.href}
+                key={scenario.title}
+              >
                 <span className="scenario-label">{scenario.label}</span>
                 <h3>{scenario.title}</h3>
                 <p>{scenario.description}</p>

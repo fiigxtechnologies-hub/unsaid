@@ -454,3 +454,299 @@ main {
     transition: none;
   }
 }
+
+.setup-shell {
+  min-height: 100vh;
+  padding-bottom: 72px;
+}
+
+.setup-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.setup-main {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(520px, 1fr);
+  align-items: start;
+  gap: clamp(64px, 8vw, 112px);
+  padding-top: clamp(72px, 9vw, 124px);
+}
+
+.setup-intro {
+  position: sticky;
+  top: 64px;
+  padding-top: 28px;
+}
+
+.setup-intro .eyebrow {
+  margin-bottom: 26px;
+}
+
+.setup-intro h1 {
+  max-width: 520px;
+  margin: 0;
+  font-size: clamp(2.8rem, 5vw, 4.6rem);
+  font-weight: 620;
+  letter-spacing: -0.062em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.setup-intro > p:last-child {
+  max-width: 480px;
+  margin: 28px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.setup-form-card {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.form-heading {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 34px;
+  padding-bottom: 28px;
+}
+
+.form-heading h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 680;
+  letter-spacing: -0.035em;
+}
+
+.form-heading p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.form-field + .form-field {
+  margin-top: 26px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.label-row > span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid #cbc8bf;
+  border-radius: 14px;
+  background: var(--surface-strong);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  padding: 14px 15px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.form-field textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #8a8d86;
+}
+
+.form-field input:hover,
+.form-field textarea:hover {
+  border-color: #aeb8b2;
+}
+
+.form-field input:focus-visible,
+.form-field textarea:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(49, 94, 81, 0.13);
+  outline: none;
+}
+
+.form-field input[aria-invalid="true"],
+.form-field textarea[aria-invalid="true"] {
+  border-color: #a1493f;
+}
+
+.field-guidance {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.field-error {
+  margin: 7px 0 0;
+  color: #8f372f;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.form-reminder {
+  border-left: 3px solid var(--accent-soft);
+  margin: 30px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  padding-left: 13px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.form-actions button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 10px 22px rgba(49, 94, 81, 0.18);
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0 26px;
+  transition: background-color 150ms ease, box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.form-actions button:hover {
+  background: var(--accent-dark);
+  box-shadow: 0 13px 26px rgba(49, 94, 81, 0.23);
+  transform: translateY(-1px);
+}
+
+.form-actions button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.form-actions a {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: #b7bbb5;
+  text-underline-offset: 4px;
+}
+
+.form-status {
+  min-height: 0;
+  margin-top: 24px;
+  color: var(--accent-dark);
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.form-status:empty {
+  display: none;
+}
+
+.simulation-note {
+  border-top: 1px solid var(--border);
+  margin: 28px 0 0;
+  padding-top: 22px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 940px) {
+  .setup-main {
+    grid-template-columns: 1fr;
+    gap: 52px;
+    padding-top: 72px;
+  }
+
+  .setup-intro {
+    position: static;
+    padding-top: 0;
+  }
+
+  .setup-intro h1,
+  .setup-intro > p:last-child {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 540px) {
+  .setup-shell {
+    padding-bottom: 32px;
+  }
+
+  .setup-main {
+    gap: 38px;
+    padding-top: 56px;
+  }
+
+  .setup-intro h1 {
+    font-size: clamp(2.55rem, 12vw, 3.5rem);
+  }
+
+  .setup-intro > p:last-child {
+    font-size: 0.98rem;
+  }
+
+  .setup-form-card {
+    border-radius: 22px;
+    padding: 24px 18px;
+  }
+
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .form-actions a {
+    align-self: center;
+    padding: 6px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-actions button,
+  .form-field input,
+  .form-field textarea {
+    transition: none;
+  }
+}
